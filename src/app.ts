@@ -1,7 +1,10 @@
+import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 
-import { loadApiEndpoints } from "./controllers/api";
+import { loadApiEndpoints } from "./routes";
+
+dotenv.config();
 
 // Create Express server
 const app = express();
