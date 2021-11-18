@@ -2,12 +2,16 @@ import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 
+import { databaseConnection } from "./database/config";
 import { loadApiEndpoints } from "./routes";
 
 dotenv.config();
 
 // Create Express server
+
 const app = express();
+
+databaseConnection();
 
 // Express configuration
 app.set("port", process.env.PORT || 3000);

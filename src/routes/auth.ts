@@ -1,6 +1,8 @@
 import { Router } from "express";
 
 import { login, register, renewToken } from "../controllers/auth.controller";
+import { validateFields } from "../middlewares/validate-fields";
+import * as authValidator from "../validations/auth";
 
 /* 
     This is the router for the authentication routes.
@@ -9,8 +11,20 @@ import { login, register, renewToken } from "../controllers/auth.controller";
 
 const authRouter = Router();
 
-authRouter.post("/", login);
-authRouter.post("/register", register);
-authRouter.get("/renew-token", renewToken);
+authRouter.post(
+  "/",
+  authValidator.credentialsValidation,
+  validateFields,
+  login
+);
+
+authRouter.post(
+  "/register",
+  [...authValidator.credentialsValidation, authValidator.name],
+  validateFields,
+  register
+);
+
+authRouter.get("/renew-token", [], renewToken);
 
 export default authRouter;
