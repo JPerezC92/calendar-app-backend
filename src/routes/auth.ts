@@ -1,7 +1,10 @@
 import { Router } from "express";
 
 import { login, register, renewToken } from "../controllers/auth.controller";
-import { validateFields } from "../middlewares/validate-fields";
+import {
+  validateFields,
+  verifyEmailIsNotRegistered,
+} from "../middlewares/auth";
 import * as authValidator from "../validations/auth";
 
 /* 
@@ -21,7 +24,7 @@ authRouter.post(
 authRouter.post(
   "/register",
   [...authValidator.credentialsValidation, authValidator.name],
-  validateFields,
+  [validateFields, verifyEmailIsNotRegistered],
   register
 );
 
