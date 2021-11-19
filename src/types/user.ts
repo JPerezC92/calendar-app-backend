@@ -1,6 +1,6 @@
 import { Credentials } from ".";
 
 export interface User extends Credentials {
-  _id: number;
+  _id: string;
   name: string;
 }

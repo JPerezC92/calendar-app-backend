@@ -1,20 +1,27 @@
 import * as bcryptjs from "bcryptjs";
 import { Request, Response } from "express";
 
+import { generateJWT } from "../helpers/jwt";
 import { UserModel } from "../models";
-import { NewUser } from "../types";
+import { Credentials, JwtPayload, NewUser } from "../types";
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const credentials = req.body;
+    const credentials = req.body as Credentials;
     const user = await UserModel.findOne({ email: credentials.email });
+
+    if (!user) {
+      throw new Error("Usuario o contraseña invalidos");
+    }
+
+    const token = await generateJWT(user._id, user.name);
 
     return res.json({
       success: true,
       payload: {
         id: user?._id,
-        email: user?.email,
         name: user?.name,
+        token,
       },
     });
   } catch (error) {
@@ -41,9 +48,15 @@ export const register = async (
     const user = new UserModel(newUser);
     await user.save();
 
+    const token = await generateJWT(user._id, user.name);
+
     return res.status(201).json({
       success: true,
-      payload: newUser,
+      payload: {
+        uid: user?._id,
+        name: user?.name,
+        token,
+      },
     });
   } catch (error) {
     console.log(error);
@@ -55,10 +68,25 @@ export const register = async (
   }
 };
 
-export const renewToken = (req: Request, res: Response): void => {
-  const token = "new token";
-  res.json({
-    message: "renew token",
-    payload: token,
-  });
+export const renewToken = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const jwtPayload = req.body as JwtPayload;
+
+    const token = await generateJWT(jwtPayload.uid, jwtPayload.name);
+
+    return res.json({
+      message: "renew token",
+      payload: token,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Por favor hable con el admninistrador",
+    });
+  }
 };

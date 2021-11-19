@@ -6,6 +6,7 @@ import {
   verifyCredentials,
   verifyEmailIsNotRegistered,
 } from "../middlewares/auth";
+import { validateJWT } from "../middlewares/auth/validateJWT";
 import * as authValidator from "../validations/auth";
 
 /* 
@@ -29,6 +30,6 @@ authRouter.post(
   register
 );
 
-authRouter.get("/renew-token", [], renewToken);
+authRouter.get("/renew-token", [validateJWT], renewToken);
 
 export default authRouter;
