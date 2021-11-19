@@ -1,6 +1,6 @@
-export interface User {
-  id: number;
+import { Credentials } from ".";
+
+export interface User extends Credentials {
+  _id: number;
   name: string;
-  password: string;
-  email: string;
 }

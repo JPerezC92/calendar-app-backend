@@ -3,6 +3,7 @@ import { Router } from "express";
 import { login, register, renewToken } from "../controllers/auth.controller";
 import {
   validateFields,
+  verifyCredentials,
   verifyEmailIsNotRegistered,
 } from "../middlewares/auth";
 import * as authValidator from "../validations/auth";
@@ -17,7 +18,7 @@ const authRouter = Router();
 authRouter.post(
   "/",
   authValidator.credentialsValidation,
-  validateFields,
+  [validateFields, verifyCredentials],
   login
 );
 
