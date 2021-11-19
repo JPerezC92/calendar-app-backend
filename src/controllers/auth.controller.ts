@@ -78,7 +78,7 @@ export const renewToken = async (
     const token = await generateJWT(jwtPayload.uid, jwtPayload.name);
 
     return res.json({
-      message: "renew token",
+      success: true,
       payload: token,
     });
   } catch (error) {
