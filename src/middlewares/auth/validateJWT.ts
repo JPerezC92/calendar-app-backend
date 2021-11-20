@@ -22,7 +22,7 @@ export const validateJWT = (
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    req.body = payload;
+    req.body.jwtPayload = payload;
 
     next();
   } catch (error) {

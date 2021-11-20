@@ -7,11 +7,11 @@ import {
   verifyEmailIsNotRegistered,
 } from "../middlewares/auth";
 import { validateJWT } from "../middlewares/auth/validateJWT";
-import * as authValidator from "../validations/auth";
+import * as authValidator from "../validations/auth.validator";
 
 /* 
     This is the router for the authentication routes.
-    host: http://localhost:{PORT}/api/auth
+    host: http://localhost:{{PORT}}/api/auth
 */
 
 const authRouter = Router();

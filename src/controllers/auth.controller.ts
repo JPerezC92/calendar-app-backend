@@ -73,7 +73,7 @@ export const renewToken = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const jwtPayload = req.body as JwtPayload;
+    const { jwtPayload } = req.body as JwtPayload;
 
     const token = await generateJWT(jwtPayload.uid, jwtPayload.name);
 

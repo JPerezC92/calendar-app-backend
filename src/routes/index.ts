@@ -1,6 +1,7 @@
 import { Application, Router } from "express";
 
-import authRouter from "./auth";
+import authRouter from "./auth.router";
+import eventRouter from "./event.router";
 
 /* 
     This is the main router for the application.
@@ -15,6 +16,7 @@ import authRouter from "./auth";
 const mainRouter = Router();
 
 mainRouter.use("/auth", authRouter);
+mainRouter.use("/events", eventRouter);
 
 export const loadApiEndpoints = (app: Application): void => {
   app.use("/", Router().use("/api", mainRouter));
