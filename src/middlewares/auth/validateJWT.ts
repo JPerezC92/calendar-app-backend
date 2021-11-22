@@ -11,9 +11,9 @@ export const validateJWT = (
   const token = req.headers["x-access-token"] as string;
 
   if (!token) {
-    return res.status(401).send({
-      message: "No se adjunto el token.",
-    });
+    return res
+      .status(401)
+      .json({ success: false, message: "No se adjunto el token." });
   }
 
   try {
