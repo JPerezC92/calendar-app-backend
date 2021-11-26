@@ -19,8 +19,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     return res.json({
       success: true,
       payload: {
-        id: user?._id,
-        name: user?.name,
+        user: { id: user?._id, name: user?.name },
         token,
       },
     });
@@ -48,13 +47,12 @@ export const register = async (
     const user = new UserModel(newUser);
     await user.save();
 
-    const token = await generateJWT(user._id, user.name);
+    const token = await generateJWT(user.id, user.name);
 
     return res.status(201).json({
       success: true,
       payload: {
-        uid: user?._id,
-        name: user?.name,
+        user: { uid: user?.id, name: user?.name },
         token,
       },
     });
