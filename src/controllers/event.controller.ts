@@ -12,10 +12,11 @@ export const getAllEvents = async (
 ): Promise<Response> => {
   try {
     const { jwtPayload } = req.body as JwtPayload;
+    console.log({ jwtPayload });
 
     const events = await CalendarEventModel.find({
-      userId: jwtPayload.uid,
-    }).populate("userId", "name");
+      user: jwtPayload.uid,
+    }).populate("user", "firstname lastname");
 
     return res.json({
       success: true,
@@ -40,7 +41,7 @@ export const createEvent = async (
 
   const calendarEvent = await new CalendarEventModel({
     ...newCalendarEvent,
-    userId: new mongoose.Types.ObjectId(jwtPayload.uid),
+    user: new mongoose.Types.ObjectId(jwtPayload.uid),
   }).save();
 
   try {
@@ -67,7 +68,7 @@ export const updateEvent = async (
     JwtPayload;
 
   const calendarEventFound = await CalendarEventModel.findOneAndUpdate(
-    { _id: eventId, userId: jwtPayload.uid },
+    { _id: eventId, user: jwtPayload.uid },
     { ...calendarEvent },
     { new: true }
   );
@@ -103,7 +104,7 @@ export const deleteEvent = async (
 
   const calendarEventDeleted = await CalendarEventModel.findOneAndDelete({
     _id: eventId,
-    userId: jwtPayload.uid,
+    user: jwtPayload.uid,
   });
 
   if (!calendarEventDeleted) {
