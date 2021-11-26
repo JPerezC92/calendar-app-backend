@@ -3,7 +3,11 @@ import { model, Schema } from "mongoose";
 import { User } from "../types";
 
 const UserMongoSchema = new Schema({
-  name: {
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
     type: String,
     required: true,
   },

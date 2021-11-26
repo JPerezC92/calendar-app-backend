@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Router } from "express";
 
 import { login, register, renewToken } from "../controllers/auth.controller";
 import {
@@ -16,11 +16,11 @@ import * as authValidator from "../validations/auth.validator";
 
 const authRouter = Router();
 
-authRouter.post("/", [verifyCredentials], login);
+authRouter.post("/login", [verifyCredentials], login);
 
 authRouter.post(
   "/register",
-  [...authValidator.credentialsValidation, authValidator.name],
+  authValidator.registerValidation,
   [validateFields, verifyEmailIsNotRegistered],
   register
 );

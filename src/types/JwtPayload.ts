@@ -1,6 +1,7 @@
 export type JwtPayload = {
   jwtPayload: {
     uid: string;
-    name: string;
+    firstname: string;
+    lastname: string;
   };
 };
