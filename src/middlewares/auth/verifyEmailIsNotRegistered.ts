@@ -15,7 +15,7 @@ export const verifyEmailIsNotRegistered = async (
   if (user) {
     return res.status(400).json({
       success: false,
-      message: "El usuario ya existe",
+      message: "El correo ya esta registrado",
     });
   }
 

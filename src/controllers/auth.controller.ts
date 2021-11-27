@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       success: true,
       payload: {
         user: {
-          id: user._id,
+          uid: user._id,
           firstname: user.firstname,
           lastname: user.lastname,
         },
