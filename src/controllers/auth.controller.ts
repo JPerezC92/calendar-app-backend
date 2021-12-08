@@ -89,7 +89,14 @@ export const renewToken = async (
 
     return res.json({
       success: true,
-      payload: token,
+      payload: {
+        token,
+        user: {
+          uid: jwtPayload.uid,
+          firstname: jwtPayload.firstname,
+          lastname: jwtPayload.lastname,
+        },
+      },
     });
   } catch (error) {
     console.log(error);

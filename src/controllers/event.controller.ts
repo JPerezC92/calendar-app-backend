@@ -12,11 +12,10 @@ export const getAllEvents = async (
 ): Promise<Response> => {
   try {
     const { jwtPayload } = req.body as JwtPayload;
-    console.log({ jwtPayload });
 
     const events = await CalendarEventModel.find({
-      user: jwtPayload.uid,
-    }).populate("user", "firstname lastname");
+      userId: jwtPayload.uid,
+    });
 
     return res.json({
       success: true,
@@ -41,7 +40,9 @@ export const createEvent = async (
 
   const calendarEvent = await new CalendarEventModel({
     ...newCalendarEvent,
-    user: new mongoose.Types.ObjectId(jwtPayload.uid),
+    // this is a scape hatch because if notes is empty, moongose will throw an error
+    notes: newCalendarEvent.notes || " ",
+    userId: new mongoose.Types.ObjectId(jwtPayload.uid),
   }).save();
 
   try {
@@ -68,8 +69,15 @@ export const updateEvent = async (
     JwtPayload;
 
   const calendarEventFound = await CalendarEventModel.findOneAndUpdate(
-    { _id: eventId, user: jwtPayload.uid },
-    { ...calendarEvent },
+    { _id: eventId, userId: jwtPayload.uid },
+    {
+      id: calendarEvent.id,
+      title: calendarEvent.title,
+      notes: calendarEvent.notes,
+      start: calendarEvent.start,
+      end: calendarEvent.end,
+    },
+
     { new: true }
   );
 
@@ -104,7 +112,7 @@ export const deleteEvent = async (
 
   const calendarEventDeleted = await CalendarEventModel.findOneAndDelete({
     _id: eventId,
-    user: jwtPayload.uid,
+    userId: jwtPayload.uid,
   });
 
   if (!calendarEventDeleted) {

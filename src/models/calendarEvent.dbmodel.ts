@@ -20,7 +20,7 @@ const CalendarEventMongoSchema = new Schema(
       type: Date,
       required: true,
     },
-    user: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -35,7 +35,7 @@ const CalendarEventMongoSchema = new Schema(
           notes: ret.notes,
           start: ret.start,
           end: ret.end,
-          user: ret.user,
+          userId: ret.userId,
         };
       },
     },

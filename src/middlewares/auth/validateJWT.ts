@@ -26,7 +26,7 @@ export const validateJWT = (
 
     next();
   } catch (error) {
-    console.log(error);
+    console.log({ error });
     return res.status(401).json({
       success: false,
       message: "Por favor hable con el administrador.",
