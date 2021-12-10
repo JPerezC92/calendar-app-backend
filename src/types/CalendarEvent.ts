@@ -1,7 +1,8 @@
 export interface CalendarEvent {
-  id: number;
+  id: string;
   title: string;
   notes: string;
   start: Date;
   end: Date;
+  userId: string;
 }

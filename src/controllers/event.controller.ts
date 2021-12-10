@@ -15,11 +15,18 @@ export const getAllEvents = async (
 
     const events = await CalendarEventModel.find({
       userId: jwtPayload.uid,
-    });
+    }).populate("userId", "_id firstname lastname");
 
     return res.json({
       success: true,
-      payload: events,
+      payload: events.map((event) => ({
+        id: event.id,
+        title: event.title,
+        notes: event.notes,
+        start: event.start,
+        end: event.end,
+        user: event.userId,
+      })),
     });
   } catch (error) {
     console.log(error);
@@ -35,20 +42,31 @@ export const createEvent = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { jwtPayload, ...newCalendarEvent } = req.body as NewCalendarEvent &
-    JwtPayload;
-
-  const calendarEvent = await new CalendarEventModel({
-    ...newCalendarEvent,
-    // this is a scape hatch because if notes is empty, moongose will throw an error
-    notes: newCalendarEvent.notes || " ",
-    userId: new mongoose.Types.ObjectId(jwtPayload.uid),
-  }).save();
-
   try {
+    const { jwtPayload, ...newCalendarEvent } = req.body as NewCalendarEvent &
+      JwtPayload;
+
+    const calendarEvent = await new CalendarEventModel({
+      ...newCalendarEvent,
+      // this is a scape hatch because if notes is empty, moongose will throw an error
+      notes: newCalendarEvent.notes || " ",
+      userId: new mongoose.Types.ObjectId(jwtPayload.uid),
+    }).save();
+
     return res.json({
       success: true,
-      payload: calendarEvent,
+      payload: {
+        id: calendarEvent.id,
+        title: calendarEvent.title,
+        notes: calendarEvent.notes,
+        start: calendarEvent.start,
+        end: calendarEvent.end,
+        user: {
+          uid: jwtPayload.uid,
+          firstName: jwtPayload.firstname,
+          lastName: jwtPayload.lastname,
+        },
+      },
     });
   } catch (error) {
     console.log(error);
@@ -77,7 +95,6 @@ export const updateEvent = async (
       start: calendarEvent.start,
       end: calendarEvent.end,
     },
-
     { new: true }
   );
 
@@ -91,7 +108,18 @@ export const updateEvent = async (
   try {
     return res.json({
       success: true,
-      payload: calendarEventFound,
+      payload: {
+        id: calendarEventFound.id,
+        title: calendarEventFound.title,
+        notes: calendarEventFound.notes,
+        start: calendarEventFound.start,
+        end: calendarEventFound.end,
+        user: {
+          uid: jwtPayload.uid,
+          firstName: jwtPayload.firstname,
+          lastName: jwtPayload.lastname,
+        },
+      },
     });
   } catch (error) {
     console.log(error);
@@ -125,7 +153,18 @@ export const deleteEvent = async (
   try {
     return res.json({
       success: true,
-      payload: calendarEventDeleted,
+      payload: {
+        id: calendarEventDeleted.id,
+        title: calendarEventDeleted.title,
+        notes: calendarEventDeleted.notes,
+        start: calendarEventDeleted.start,
+        end: calendarEventDeleted.end,
+        user: {
+          uid: jwtPayload.uid,
+          firstName: jwtPayload.firstname,
+          lastName: jwtPayload.lastname,
+        },
+      },
     });
   } catch (error) {
     console.log(error);
